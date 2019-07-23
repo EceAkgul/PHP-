@@ -1,6 +1,20 @@
+<?php
+
+session_start();
+session_destroy();
+session_start();
+ini_set('display_errors', 0);
+ini_set('display_startup_errors', 0);
+error_reporting(E_ALL);
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+<script src="http://localhost/camping/node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
@@ -41,17 +55,21 @@ if(isset($_POST)){
          //echo $pass1['password']; 
          
 
-        if($pass1['password']!= $password) { echo "hata!"; 
+        if($pass1['password']!= $password) { 
+            echo "hata!"; 
             die; } 
        
-      $result=pg_query($dbconn , " SELECT email , password from public.user where email = '".$email."' " );
-      
-      $row=pg_fetch_assoc($result); } }
-      echo "calısıyor"; "<br>";
+      $result=pg_query($dbconn , " SELECT email , password , user_id from public.user where email = '".$email."' " );      
+      $row=pg_fetch_assoc($result); 
+      $_SESSION['email'] = $row['email']; // store username
+      $_SESSION['password'] = $row['password']; // store password
+      $_SESSION['user_id'] = $row['user_id'];
+      header("Location:index.php");
+    } }
+
 
       print_r($row);
-
-      
+     
     
    ?> 
 

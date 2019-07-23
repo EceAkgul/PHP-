@@ -1,13 +1,23 @@
 <!DOCTYPE html>
+
+<?php
+$conn = ( "host=localhost port=5432 dbname=KampSepeti user=pizza password=Test01" );
+$dbconn = pg_connect($conn);
+?>
+
 <html lang="en">
 <head>
+    <script src="https:localhost/node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
 </head>
 <body>
-   <form method="post">
+
+   <form id="myform" method="post">
+
    Name:<br>
    <input type="text" name="name"><br>
    Email:<br>
@@ -20,91 +30,94 @@
    <input type="radio" name="gender" value="male" checked> Male<br>
   <input type="radio" name="gender" value="female"> Female<br>
   <input type="radio" name="gender" value="other"> Other <br>
-  City:<br>
-  <select name="Sehir" name="user_city">
-    <option value="0">------</option>
-    <option value="user_city">Adana</option>
-    <option value="2">Adıyaman</option>
-    <option value="3">Afyonkarahisar</option>
-    <option value="4">Ağrı</option>
-    <option value="5">Amasya</option>
-    <option value="6">Ankara</option>
-    <option value="7">Antalya</option>
-    <option value="8">Artvin</option>
-    <option value="9">Aydın</option>
-    <option value="10">Balıkesir</option>
-    <option value="11">Bilecik</option>
-    <option value="12">Bingöl</option>
-    <option value="13">Bitlis</option>
-    <option value="14">Bolu</option>
-    <option value="15">Burdur</option>
-    <option value="16">Bursa</option>
-    <option value="17">Çanakkale</option>
-    <option value="18">Çankırı</option>
-    <option value="19">Çorum</option>
-    <option value="20">Denizli</option>
-    <option value="21">Diyarbakır</option>
-    <option value="22">Edirne</option>
-    <option value="23">Elazığ</option>
-    <option value="24">Erzincan</option>
-    <option value="25">Erzurum</option>
-    <option value="26">Eskişehir</option>
-    <option value="27">Gaziantep</option>
-    <option value="28">Giresun</option>
-    <option value="29">Gümüşhane</option>
-    <option value="30">Hakkâri</option>
-    <option value="31">Hatay</option>
-    <option value="32">Isparta</option>
-    <option value="33">Mersin</option>
-    <option value="34">İstanbul</option>
-    <option value="35">İzmir</option>
-    <option value="36">Kars</option>
-    <option value="37">Kastamonu</option>
-    <option value="38">Kayseri</option>
-    <option value="39">Kırklareli</option>
-    <option value="40">Kırşehir</option>
-    <option value="41">Kocaeli</option>
-    <option value="42">Konya</option>
-    <option value="43">Kütahya</option>
-    <option value="44">Malatya</option>
-    <option value="45">Manisa</option>
-    <option value="46">Kahramanmaraş</option>
-    <option value="47">Mardin</option>
-    <option value="48">Muğla</option>
-    <option value="49">Muş</option>
-    <option value="50">Nevşehir</option>
-    <option value="51">Niğde</option>
-    <option value="52">Ordu</option>
-    <option value="53">Rize</option>
-    <option value="54">Sakarya</option>
-    <option value="55">Samsun</option>
-    <option value="56">Siirt</option>
-    <option value="57">Sinop</option>
-    <option value="58">Sivas</option>
-    <option value="59">Tekirdağ</option>
-    <option value="60">Tokat</option>
-    <option value="61">Trabzon</option>
-    <option value="62">Tunceli</option>
-    <option value="63">Şanlıurfa</option>
-    <option value="64">Uşak</option>
-    <option value="65">Van</option>
-    <option value="66">Yozgat</option>
-    <option value="67">Zonguldak</option>
-    <option value="68">Aksaray</option>
-    <option value="69">Bayburt</option>
-    <option value="70">Karaman</option>
-    <option value="71">Kırıkkale</option>
-    <option value="72">Batman</option>
-    <option value="73">Şırnak</option>
-    <option value="74">Bartın</option>
-    <option value="75">Ardahan</option>
-    <option value="76">Iğdır</option>
-    <option value="77">Yalova</option>
-    <option value="78">Karabük</option>
-    <option value="79">Kilis</option>
-    <option value="80">Osmaniye</option>
-    <option value="81">Düzce</option>
-</select><br>
+  <?php
+  $pmenu = $cmenu = null;
+if (isset($_GET["pcat"])) {
+    $pmenu = $_GET["pcat"];
+
+    $result=pg_query($dbconn , "SELECT * from public.city where reg_id = '".$pmenu."' ");
+    $row = pg_fetch_assoc($result);
+  
+
+}
+
+
+if (isset($_POST['submit'])) {
+    if (isset($_POST['ccat'])) {
+        $pmenu = $_POST['pcat'];
+    }
+    if (isset($_POST['ccat']) && is_numeric($_POST['ccat'])) {
+        $cmenu = $_POST['ccat'];
+    }
+    if (isset($_POST['ccat']) && is_numeric($_POST['ccat'])) {
+        echo 'Parent Cat Id: ' . $pmenu . ' -> ' . 'Subcategory Id: ' . $cmenu;
+    } else if (isset($_POST['ccat'])) {
+        echo 'Parent Cat Id: ' . $pmenu;
+    }
+}
+?>
+ <script type="text/javascript">
+           
+           function autoSubmit()
+           {
+               with (window.document.form) {
+                   
+                   if (pcat.selectedIndex === 0) {
+                       window.location.href = 'sourcecode.php';
+                   } else {
+                       window.location.href = 'sourcecode.php?pcat=' + pcat.options[pcat.selectedIndex].value;
+                   }
+               }
+           }
+       </script>
+
+ 
+  
+  <?php
+        $actual_link = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+        ?>
+  
+
+  <form class="form" id="form" name="form" method="post" action="<?php echo $actual_link; ?>">
+            <fieldset>
+                <p class="bg">
+                    Bölge: <br>
+                    <select id="pcat" name="pcat" onchange="autoSubmit();">
+                        <option value="">Bölge Seçiniz..</option>
+                        <?php
+                        
+                        $result=pg_query($dbconn , " SELECT * from public.region " );
+                        $row = pg_fetch_assoc($result);
+                        while ($row = pg_fetch_assoc($result)) {
+                            echo '<option value="'.htmlspecialchars($row['reg_id']).'">'.$row['name'].'</option>';
+                            //echo ("<option value=\"{$row['reg_id']}\" " . ($pmenu == $row['reg_id'] ? " selected" : "") . ">{$row['name']}</option>");
+                        }
+                        ?>
+                    </select>
+                </p>
+                <?php
+                //check whether parent category was really selected and parent category id is numeric
+                if ($pmenu != '' && is_numeric($pmenu)) {
+                    ////select sub-categories categories for a given parent category id
+                    $result=pg_query($dbconn, " SELECT name from public.city where reg_id= '".$pmenu."' ");
+                    $row=pg_fetch_assoc($result);
+                   // $sql = "select name from public.city where reg_id=" . $pmenu;
+                  //  $result = pg_query($dbconn,$sql);
+                    if (pg_num_rows($result) > 0) {
+                        ?>
+                        <p class="bg">
+                            Şehir: <br>
+                            <select id="ccat" name="ccat">
+                                <option value="">Şehir Seçiniz..</option>
+                                <?php
+                                //POPULATE DROP DOWN WITH SUBCATEGORY FROM A GIVEN PARENT CATEGORY
+                                while ($row = pg_fetch_assoc($result)) {
+                                    echo '<option value="'.htmlspecialchars($row['reg_id']).'">'.$row['name'].'</option>';
+                                   // echo ("<option value=\"{$row['name']}\" " . ($cmenu == $row['name'] ? " selected" : "") . ">{$row['name']}</option>");
+                                }
+                                ?>
+                            </select>
+                        </p>
 <input type="submit" name="submit"><br>
 
    
@@ -114,9 +127,6 @@
 </body>
 
 <?php 
-$conn = ( "host=localhost port=5432 dbname=KampSepeti user=pizza password=Test01" );
-$dbconn = pg_connect($conn);
-
 
 if(isset($_POST['name'])) { $name=$_POST['name'];}
 if(isset($_POST['email'])) { $email=$_POST['email'];}
@@ -137,9 +147,6 @@ if($name!='' && $email!='' && $password!='' && $age!='' && $gender!='') {
     
     print_r($row);
 
-
-
-
-
 ?>
+
 </html>
